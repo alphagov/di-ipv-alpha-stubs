@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
 
-group 'uk.gov.di'
+group 'uk.gov.di.ipv'
 
 repositories {
     mavenCentral()
@@ -26,4 +26,4 @@ run {
     }
 }
 
-mainClassName = 'uk.gov.di.App'
+mainClassName = 'uk.gov.di.ipv.App'
