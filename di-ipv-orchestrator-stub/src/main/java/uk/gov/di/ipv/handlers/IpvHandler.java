@@ -31,12 +31,6 @@ public class IpvHandler {
     private final Logger logger = LoggerFactory.getLogger(IpvHandler.class);
     private final Map<String, Object> stateSession = new HashMap<>();
 
-    // visits /authorize at ipv engine: does form
-    // ipv engine returns code to orc via callback
-    // orc calls ipv engine to exchange code for token via back-channel
-    // ipv returns token
-    // orc uses token to fetch /userinfo data.
-
     public Route doAuthorize = (Request request, Response response) -> {
         var state = new State();
         stateSession.put(state.getValue(), null);
@@ -65,14 +59,14 @@ public class IpvHandler {
         // Some basic state checking
         if (!stateSession.containsKey(request.queryParams("state"))) {
             logger.error("Returned state does not match");
-            return null; // TODO: Return failure screen
+            throw new RuntimeException("Returned state does not match the provided one");
         }
 
         var authorizationResponse = AuthorizationResponse.parse(URI.create("https:///?" + request.queryString()));
         if (!authorizationResponse.indicatesSuccess()) {
             var error = authorizationResponse.toErrorResponse().getErrorObject();
             logger.error("Failed authorization code request: {}", error);
-            return null; // TODO: Return failure screen
+            throw new RuntimeException("Failed authorization code request");
         }
 
         return authorizationResponse
