@@ -11,7 +11,6 @@ RUN mkdir /app
 RUN apt-get update && apt-get install -y curl
 COPY --from=build \
 	/home/gradle/src/build/distributions/src.tar \
-	/home/gradle/src/orchestrator-stub.yml \
 	/app/
 
 WORKDIR /app
@@ -22,5 +21,5 @@ RUN chown -R appuser:appgroup /app/
 USER appuser
 EXPOSE $PORT
 
-ENTRYPOINT ["./src/bin/src", "server", "orchestrator-stub.yml"]
+ENTRYPOINT ["./src/bin/src"]
 LABEL project="di-ipv-orchestrator-stub"
