@@ -15,7 +15,6 @@ public class Orchestrator {
         port(Integer.parseInt(PORT));
 
         ipvHandler = new IpvHandler();
-
         initRoutes();
     }
 
