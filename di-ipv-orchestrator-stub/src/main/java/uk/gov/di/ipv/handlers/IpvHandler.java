@@ -42,7 +42,7 @@ public class IpvHandler {
         stateSession.put(state.getValue(), null);
 
         var authRequest = new AuthorizationRequest.Builder(
-            new ResponseType(ResponseType.Value.CODE), new ClientID(ORCHESTRATOR_CLIENT_ID))
+            new ResponseType(ResponseType.Value.CODE), new ClientID(IPV_CLIENT_ID))
             .state(state)
             .redirectionURI(new URI(ORCHESTRATOR_REDIRECT_URL))
             .endpointURI(new URI(IPV_ENDPOINT))
@@ -83,7 +83,7 @@ public class IpvHandler {
     private AccessToken exchangeCodeForToken(AuthorizationCode authorizationCode) {
         TokenRequest tokenRequest = new TokenRequest(
             URI.create(IPV_ENDPOINT).resolve("/oauth/token"),
-            new ClientID(ORCHESTRATOR_CLIENT_ID),
+            new ClientID(IPV_CLIENT_ID),
             new AuthorizationCodeGrant(authorizationCode, URI.create(ORCHESTRATOR_REDIRECT_URL))
         );
 
