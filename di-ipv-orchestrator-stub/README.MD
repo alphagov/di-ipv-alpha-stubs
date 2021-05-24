@@ -15,7 +15,7 @@ Variable | Description | Example Value
 --- | --- | --- |
 IPV_ENDPOINT | The IPV engine endpoint to call | `http://localhost:3000/` |
 IPV_CLIENT_ID | IPV client id | `some_client_id` |
-ORCHESTRATOR_REDIRECT_URL | The redirect url for the callback from IPV engine | `http://localhost:8081/orchestrator/codeCallback` |
+ORCHESTRATOR_REDIRECT_URL | The redirect url for the callback from IPV engine | `http://localhost:8081/orchestrator/callback` |
 ORCHESTRATOR_PORT | The port number the orchestrator should run on | `8081` |
 
 ## Running locally

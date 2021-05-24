@@ -24,7 +24,7 @@ public class Orchestrator {
 
         path("/orchestrator", () -> {
             get("/authorize", ipvHandler.doAuthorize);
-            get("/codeCallback", ipvHandler.doCallback);
+            get("/callback", ipvHandler.doCallback);
         });
 
         internalServerError("<html><body><h1>Oops something went wrong</h1></body></html>");
