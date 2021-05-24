@@ -20,4 +20,9 @@ ORCHESTRATOR_PORT | The port number the orchestrator should run on | `8081` |
 
 ## Running locally
 
-To run locally, first build
+To run locally, you can run the startup script.
+```shell
+./startup.sh
+```
+This will first build the project with gradle,
+and after it will attempt to run it.
