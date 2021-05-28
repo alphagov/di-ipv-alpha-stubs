@@ -39,7 +39,7 @@ public class IpvHandler {
             new ResponseType(ResponseType.Value.CODE), new ClientID(IPV_CLIENT_ID))
             .state(state)
             .redirectionURI(new URI(ORCHESTRATOR_REDIRECT_URL))
-            .endpointURI(new URI(IPV_ENDPOINT).resolve("/oauth2/authenticate"))
+            .endpointURI(new URI(IPV_ENDPOINT).resolve("/oauth2/authorize"))
             .build();
 
         response.redirect(authRequest.toURI().toString());
