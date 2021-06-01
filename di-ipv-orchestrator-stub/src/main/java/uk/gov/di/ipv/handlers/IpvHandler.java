@@ -1,5 +1,15 @@
 package uk.gov.di.ipv.handlers;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.BadJOSEException;
+import com.nimbusds.jose.proc.DefaultJOSEObjectTypeVerifier;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -20,8 +30,11 @@ import spark.Route;
 import uk.gov.di.ipv.utils.ViewHelper;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import static uk.gov.di.ipv.config.OrchestratorConfig.*;
@@ -49,6 +62,11 @@ public class IpvHandler {
     public Route doCallback = (Request request, Response response) -> {
         var authorizationCode = getAuthorizationCode(request);
         var accessToken = exchangeCodeForToken(authorizationCode);
+
+        if (!isTokenValid(accessToken)) {
+            throw new RuntimeException("token not valid");
+        }
+
         var userInfo = getUserInfo(accessToken);
         var attributes = userInfo.toJSONObject();
 
@@ -92,6 +110,32 @@ public class IpvHandler {
             .toSuccessResponse()
             .getTokens()
             .getAccessToken();
+    }
+
+    public boolean isTokenValid(AccessToken accessToken) throws MalformedURLException {
+        var keySource = new RemoteJWKSet<>(URI.create(IPV_ENDPOINT).resolve("/.well-known/jwks.json").toURL());
+        var expectedJwsAlgorithm = JWSAlgorithm.RS256;
+        var keySelector = new JWSVerificationKeySelector<>(expectedJwsAlgorithm, keySource);
+        var jwtProcessor = new DefaultJWTProcessor<>();
+
+        jwtProcessor.setJWSTypeVerifier(
+            new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("jwt"))
+        );
+
+        jwtProcessor.setJWSKeySelector(keySelector);
+        jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier<>(
+            new JWTClaimsSet.Builder().issuer("urn:di:ipv:ipv-atp-playbox").build(),
+            new HashSet<>(Arrays.asList("sub", "iat", "exp"))
+        ));
+
+        try {
+            jwtProcessor.process(accessToken.toString(), null);
+        } catch (java.text.ParseException | BadJOSEException | JOSEException e) {
+            logger.error("Invalid JWT token received", e);
+            return false;
+        }
+
+        return true;
     }
 
     public UserInfo getUserInfo(AccessToken accessToken) {
