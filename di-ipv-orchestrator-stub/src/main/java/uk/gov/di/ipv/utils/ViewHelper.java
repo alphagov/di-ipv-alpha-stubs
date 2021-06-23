@@ -11,6 +11,10 @@ public class ViewHelper {
         return new MustacheTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 
+    public static String renderString(String data, String templatePath) {
+        return new MustacheTemplateEngine().render(new ModelAndView(data, templatePath));
+    }
+
     public static String renderSet(Set set, String templatePath) {
         return new MustacheTemplateEngine().render(new ModelAndView(set, templatePath));
     }

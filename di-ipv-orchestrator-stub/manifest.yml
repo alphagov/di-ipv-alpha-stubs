@@ -1,0 +1,14 @@
+---
+applications:
+  - name: di-ipv-orchestrator-stub
+    path: build/distributions/di-ipv-orchestrator-stub.zip
+    memory: 256M
+    buildpack: java_buildpack
+    command: cd di-ipv-orchestrator-stub && bin/di-ipv-orchestrator-stub
+    env:
+      JAVA_HOME: "../.java-buildpack/open_jdk_jre"
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 13.+}, memory_calculator: {stack_threads: 200}}'
+      JAVA_OPTS: '-Xss200k -XX:ReservedCodeCacheSize=50M -XX:MaxMetaspaceSize=100M'
+      ORCHESTRATOR_PORT: 8080
+      IPV_ENDPOINT: "https://di-ipv-atp-playbox.london.cloudapps.digital"
+      ORCHESTRATOR_REDIRECT_URL: "https://di-ipv-orchestrator-stub.london.cloudapps.digital/orchestrator/callback"

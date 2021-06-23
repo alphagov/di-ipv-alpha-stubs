@@ -1,5 +1,6 @@
 package uk.gov.di.ipv.handlers;
 
+import com.google.gson.Gson;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -68,9 +69,10 @@ public class IpvHandler {
         }
 
         var userInfo = getUserInfo(accessToken);
-        var attributes = userInfo.toJSONObject();
+        var attributesObject = userInfo.toJSONObject();
+        var attributes = new Gson().fromJson(attributesObject.toJSONString(), HashMap.class);
 
-        return ViewHelper.renderSet(attributes.entrySet(), "userinfo.mustache");
+        return ViewHelper.renderSet(attributesObject.entrySet(), "userinfo.mustache");
     };
 
     private AuthorizationCode getAuthorizationCode(Request request) throws ParseException {
@@ -140,7 +142,7 @@ public class IpvHandler {
 
     public UserInfo getUserInfo(AccessToken accessToken) {
         var userInfoRequest = new UserInfoRequest(
-            URI.create(IPV_ENDPOINT).resolve("/oauth2/userinfo"),
+            URI.create(IPV_USERINFO_ENDPOINT).resolve("/oauth2/userinfo"),
             (BearerAccessToken) accessToken
         );
 
