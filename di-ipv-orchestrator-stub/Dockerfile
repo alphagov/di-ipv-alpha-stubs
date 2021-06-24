@@ -1,4 +1,4 @@
-FROM gradle:jdk16@sha256:d31e12d105e332ec2ef1f31c20eac6d1467295487ac70e534e3c1d0ae4a0506e AS build
+FROM gradle:jdk15@sha256:ea8494d3eec55ecc7c3c9ff0c1106488711be0256cc022f48d86c31a528cc673 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon
