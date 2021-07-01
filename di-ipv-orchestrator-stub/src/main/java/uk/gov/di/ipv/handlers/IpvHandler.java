@@ -94,7 +94,7 @@ public class IpvHandler {
 
     private AccessToken exchangeCodeForToken(AuthorizationCode authorizationCode) {
         TokenRequest tokenRequest = new TokenRequest(
-            URI.create(IPV_ENDPOINT).resolve("/oauth2/token"),
+            URI.create(IPV_BACKCHANNEL_ENDPOINT).resolve("/oauth2/token"),
             new ClientID(IPV_CLIENT_ID),
             new AuthorizationCodeGrant(authorizationCode, URI.create(ORCHESTRATOR_REDIRECT_URL))
         );
@@ -113,7 +113,7 @@ public class IpvHandler {
     }
 
     public boolean isTokenValid(AccessToken accessToken) throws MalformedURLException {
-        var keySource = new RemoteJWKSet<>(URI.create(IPV_ENDPOINT).resolve("/.well-known/jwks.json").toURL());
+        var keySource = new RemoteJWKSet<>(URI.create(IPV_BACKCHANNEL_ENDPOINT).resolve("/.well-known/jwks.json").toURL());
         var expectedJwsAlgorithm = JWSAlgorithm.RS256;
         var keySelector = new JWSVerificationKeySelector<>(expectedJwsAlgorithm, keySource);
         var jwtProcessor = new DefaultJWTProcessor<>();
@@ -140,7 +140,7 @@ public class IpvHandler {
 
     public UserInfo getUserInfo(AccessToken accessToken) {
         var userInfoRequest = new UserInfoRequest(
-            URI.create(IPV_ENDPOINT).resolve("/oauth2/userinfo"),
+            URI.create(IPV_BACKCHANNEL_ENDPOINT).resolve("/oauth2/userinfo"),
             (BearerAccessToken) accessToken
         );
 
