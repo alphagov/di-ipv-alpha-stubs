@@ -124,7 +124,7 @@ public class IpvHandler {
 
         jwtProcessor.setJWSKeySelector(keySelector);
         jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier<>(
-            new JWTClaimsSet.Builder().issuer("urn:di:ipv:ipv-atp-playbox").build(),
+            new JWTClaimsSet.Builder().issuer("urn:di:ipv:ipv-core").build(),
             new HashSet<>(Arrays.asList("sub", "iat", "exp"))
         ));
 
