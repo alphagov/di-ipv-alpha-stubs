@@ -20,11 +20,8 @@ public class Orchestrator {
 
     public void initRoutes(){
         get("/", serveHomePage);
-
-        path("/orchestrator", () -> {
-            get("/authorize", ipvHandler.doAuthorize);
-            get("/callback", ipvHandler.doCallback);
-        });
+        get("/authorize", ipvHandler.doAuthorize);
+        get("/callback", ipvHandler.doCallback);
 
         internalServerError("<html><body><h1>Oops something went wrong</h1></body></html>");
     }
