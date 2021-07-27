@@ -22,6 +22,7 @@ import com.nimbusds.openid.connect.sdk.UserInfoErrorResponse;
 import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.UserInfoResponse;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -46,18 +47,39 @@ public class IpvHandler {
 
     public Route doAuthorize = (Request request, Response response) -> {
         var state = new State();
+        var requestedAttributes = request.queryParamsValues("attribute");
         stateSession.put(state.getValue(), null);
+
+        var attributes = getAttributes(requestedAttributes);
 
         var authRequest = new AuthorizationRequest.Builder(
             new ResponseType(ResponseType.Value.CODE), new ClientID(IPV_CLIENT_ID))
             .state(state)
+            .scope(new Scope("openid"))
             .redirectionURI(new URI(ORCHESTRATOR_REDIRECT_URL))
             .endpointURI(new URI(IPV_ENDPOINT).resolve("/oauth2/authorize"))
+            .customParameter("claims", attributes)
             .build();
 
         response.redirect(authRequest.toURI().toString());
         return null;
     };
+
+    public String getAttributes(String[] requestedAttributes) {
+        var json = new JSONObject();
+        var attributes = new JSONObject();
+
+        for (String requestedAttribute : requestedAttributes) {
+            var essential = new JSONObject();
+            essential.appendField("essential", true);
+            attributes.appendField(requestedAttribute, essential);
+        }
+
+        json.appendField("userinfo", attributes);
+//        .customParameter("claims", "{'userinfo': {'passport': {'essential': true}}}")
+
+        return json.toJSONString();
+    }
 
     public Route doCallback = (Request request, Response response) -> {
         var authorizationCode = getAuthorizationCode(request);

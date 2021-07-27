@@ -53,13 +53,49 @@
             </h1>
         </div>
         <h2 class="govuk-heading-l">Prove Your Identity</h2>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <a class="govuk-button" href="/authorize">
-                    Prove your identity
-                </a>
+        <form action="/authorize">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="attributes-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Select attributes to return
+                        </h1>
+                    </legend>
+                    <div id="attributes-hint" class="govuk-hint">
+                        Select all that apply.
+                    </div>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="attribute-passport" name="attribute" type="checkbox" value="passport">
+                            <label class="govuk-label govuk-checkboxes__label" for="attribute-passport">
+                                Passport
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="attribute-address" name="attribute" type="checkbox" value="address">
+                            <label class="govuk-label govuk-checkboxes__label" for="attribute-address">
+                                Address
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="attribute-basic-details" name="attribute" type="checkbox" value="basic-details">
+                            <label class="govuk-label govuk-checkboxes__label" for="attribute-basic-details">
+                                Basic details
+                            </label>
+                        </div>
+                    </div>
+
+                </fieldset>
             </div>
-        </div>
+            <input class="govuk-button" data-module="govuk-button" type="submit" value="Prove your identity">
+        </form>
+<!--        <div class="govuk-grid-row">-->
+<!--            <div class="govuk-grid-column-two-thirds">-->
+<!--                <a class="govuk-button" href="/authorize">-->
+<!--                    Prove your identity-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
     </main>
 </div>
 
