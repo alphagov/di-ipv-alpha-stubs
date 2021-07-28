@@ -47,10 +47,9 @@ public class IpvHandler {
 
     public Route doAuthorize = (Request request, Response response) -> {
         var state = new State();
-        var requestedAttributes = request.queryParamsValues("attribute");
         stateSession.put(state.getValue(), null);
 
-        var attributes = getAttributes(requestedAttributes);
+        var attributes = getAttributes(request);
 
         var authRequest = new AuthorizationRequest.Builder(
             new ResponseType(ResponseType.Value.CODE), new ClientID(IPV_CLIENT_ID))
@@ -65,18 +64,26 @@ public class IpvHandler {
         return null;
     };
 
-    public String getAttributes(String[] requestedAttributes) {
+    public String getAttributes(Request request) {
+        var requestedAttributes = request.queryParamsValues("attribute");
+        var levelOfConfidence = request.queryParamsValues("level-of-confidence");
+
         var json = new JSONObject();
         var attributes = new JSONObject();
 
         for (String requestedAttribute : requestedAttributes) {
             var essential = new JSONObject();
             essential.appendField("essential", true);
+
             attributes.appendField(requestedAttribute, essential);
         }
 
+        var levelOfConfidenceRequested = new JSONObject();
+        levelOfConfidenceRequested.appendField("essential", true);
+        levelOfConfidenceRequested.appendField("value", levelOfConfidence[0]);
+        attributes.appendField("level-of-confidence", levelOfConfidenceRequested);
+
         json.appendField("userinfo", attributes);
-//        .customParameter("claims", "{'userinfo': {'passport': {'essential': true}}}")
 
         return json.toJSONString();
     }
