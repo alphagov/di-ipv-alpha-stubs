@@ -23,7 +23,7 @@ public class HomeHandler {
 
         var modelMap = new HashMap<String, Object>();
         modelMap.put("attributes", attributes);
-        modelMap.put("levelsOfConfidence", levelsOfConfidence); //TODO: Use camelCase instead of kebab case
+        modelMap.put("levelsOfConfidence", levelsOfConfidence);
 
         return ViewHelper.render(modelMap, "home.mustache");
     };
