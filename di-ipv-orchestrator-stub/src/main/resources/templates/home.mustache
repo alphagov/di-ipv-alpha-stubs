@@ -67,9 +67,9 @@
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         <label for="level-of-confidence" class="govuk-label">Level of confidence</label>
                         <select class="govuk-select" id="level-of-confidence" name="level-of-confidence">
-                            {{#levels-of-confidence}}
+                            {{#levelsOfConfidence}}
                                 <option value="{{.}}">{{.}}</option>
-                            {{/levels-of-confidence}}
+                            {{/levelsOfConfidence}}
                         </select>
                     </div>
 
@@ -92,7 +92,7 @@
                             <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input" id="attribute-{{.}}" name="attribute" type="checkbox" value="{{.}}">
                                 <label class="govuk-label govuk-checkboxes__label" for="attribute-{{.}}">
-                                    {{#renderReadable}}{{.}}{{/renderReadable}}
+                                    {{.}}
                                 </label>
                             </div>
                         {{/attributes}}
