@@ -71,17 +71,19 @@ public class IpvHandler {
         var json = new JSONObject();
         var attributes = new JSONObject();
 
-        for (String requestedAttribute : requestedAttributes) {
-            var essential = new JSONObject();
-            essential.appendField("essential", true);
+        if (requestedAttributes != null) {
+            for (String requestedAttribute : requestedAttributes) {
+                var essential = new JSONObject();
+                essential.appendField("essential", true);
 
-            attributes.appendField(requestedAttribute, essential);
+                attributes.appendField(requestedAttribute, essential);
+            }
         }
 
         var levelOfConfidenceRequested = new JSONObject();
         levelOfConfidenceRequested.appendField("essential", true);
         levelOfConfidenceRequested.appendField("value", levelOfConfidence[0]);
-        attributes.appendField("level-of-confidence", levelOfConfidenceRequested);
+        attributes.appendField("levelOfConfidence", levelOfConfidenceRequested);
 
         json.appendField("userinfo", attributes);
 
