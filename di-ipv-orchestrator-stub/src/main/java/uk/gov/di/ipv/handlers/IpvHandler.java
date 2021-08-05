@@ -22,6 +22,7 @@ import com.nimbusds.openid.connect.sdk.UserInfoErrorResponse;
 import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.UserInfoResponse;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -48,16 +49,46 @@ public class IpvHandler {
         var state = new State();
         stateSession.put(state.getValue(), null);
 
+        var attributes = getAttributes(request);
+
         var authRequest = new AuthorizationRequest.Builder(
             new ResponseType(ResponseType.Value.CODE), new ClientID(IPV_CLIENT_ID))
             .state(state)
+            .scope(new Scope("openid"))
             .redirectionURI(new URI(ORCHESTRATOR_REDIRECT_URL))
             .endpointURI(new URI(IPV_ENDPOINT).resolve("/oauth2/authorize"))
+            .customParameter("claims", attributes)
             .build();
 
         response.redirect(authRequest.toURI().toString());
         return null;
     };
+
+    public String getAttributes(Request request) {
+        var requestedAttributes = request.queryParamsValues("attribute");
+        var levelOfConfidence = request.queryParamsValues("level-of-confidence");
+
+        var json = new JSONObject();
+        var attributes = new JSONObject();
+
+        if (requestedAttributes != null) {
+            for (String requestedAttribute : requestedAttributes) {
+                var essential = new JSONObject();
+                essential.appendField("essential", true);
+
+                attributes.appendField(requestedAttribute, essential);
+            }
+        }
+
+        var levelOfConfidenceRequested = new JSONObject();
+        levelOfConfidenceRequested.appendField("essential", true);
+        levelOfConfidenceRequested.appendField("value", levelOfConfidence[0]);
+        attributes.appendField("levelOfConfidence", levelOfConfidenceRequested);
+
+        json.appendField("userinfo", attributes);
+
+        return json.toJSONString();
+    }
 
     public Route doCallback = (Request request, Response response) -> {
         var authorizationCode = getAuthorizationCode(request);

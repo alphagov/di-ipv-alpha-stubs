@@ -53,13 +53,55 @@
             </h1>
         </div>
         <h2 class="govuk-heading-l">Prove Your Identity</h2>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                <a class="govuk-button" href="/authorize">
-                    Prove your identity
-                </a>
+        <form action="/authorize">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="attributes-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Select the level of confidence required
+                        </h1>
+                    </legend>
+                    <div id="level-of-confidence-hint" class="govuk-hint">
+                        Select the level of confidence required for the IPV to return.
+                    </div>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <label for="level-of-confidence" class="govuk-label">Level of confidence</label>
+                        <select class="govuk-select" id="level-of-confidence" name="level-of-confidence">
+                            {{#levelsOfConfidence}}
+                                <option value="{{.}}">{{.}}</option>
+                            {{/levelsOfConfidence}}
+                        </select>
+                    </div>
+
+                </fieldset>
             </div>
-        </div>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="attributes-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Select attributes to return
+                        </h1>
+                    </legend>
+                    <div id="attributes-hint" class="govuk-hint">
+                        Select all that apply.
+                    </div>
+
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+
+                        {{#attributes}}
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="attribute-{{.}}" name="attribute" type="checkbox" value="{{.}}">
+                                <label class="govuk-label govuk-checkboxes__label" for="attribute-{{.}}">
+                                    {{.}}
+                                </label>
+                            </div>
+                        {{/attributes}}
+                    </div>
+
+                </fieldset>
+            </div>
+            <input class="govuk-button" data-module="govuk-button" type="submit" value="Prove your identity">
+        </form>
     </main>
 </div>
 
